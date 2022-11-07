@@ -5,12 +5,11 @@ const getPackageList = require('./helpers/getPackageList');
 
 const route = './Packages' ;
 
-async function build() {
+module.exports = async function build(packageToBuild) {
 
     let packages = await getPackageList();
 
     /* If a package name is send as argument, just build that one */
-    const packageToBuild = process.env.npm_config_p ? process.env.npm_config_p : process.env.npm_config_package ? process.env.npm_config_package : null;
     if(packageToBuild){
         packages = packages.filter(package => package === packageToBuild);
     }
@@ -45,5 +44,3 @@ async function build() {
     });
 
 }
-
-build();

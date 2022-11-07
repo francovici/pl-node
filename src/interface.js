@@ -1,6 +1,7 @@
 import arg from "arg";
 import help from './help';
 import init from './init';
+import build from './build';
 
 export function interfaceCommand(args) {
     const actions = argumentOptionsParser(args);
@@ -11,6 +12,9 @@ export function interfaceCommand(args) {
     if(actions.init){
         init(actions.parameters[0]);
     }
+    if(actions.build){
+      build(actions.parameters[0]);
+  }
 }
 
 function argumentOptionsParser(rawArguments) {
