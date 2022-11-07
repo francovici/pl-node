@@ -1,6 +1,8 @@
 const oracledb = require('oracledb');
 require('dotenv').config();
 const async = require("async");
+var clc = require("cli-color");
+
 
 const packageHeadAndBody = require('./helpers/getPackageHeadAndBody');
 const getPackageList = require('./helpers/getPackageList');
@@ -35,7 +37,7 @@ module.exports = function compile(packageToCompile) {
             connection.execute(packageHeadAndBody.getPackageHead(packageName),{},
             async (specError,result)=>{
                 if(specError){
-                    console.log(`\x1b[33m[COMPILE FAILED]\x1b[0m  Package \x1b[33m${packageName}\x1b[0m not compiled.`);
+                    console.log( clc.yellowBright('[COMPILE FAILED]') + ' Package ' + clc.yellowBright(packageName) + ' not compiled.');
                     console.log(specError);
                 }
                 else{
@@ -43,18 +45,18 @@ module.exports = function compile(packageToCompile) {
                     connection.execute(packageHeadAndBody.getPackageBody(packageName),{},
                     (error,result)=>{
                         if(error){
-                            console.log(`\x1b[33m[COMPILE FAILED]\x1b[0m  Package \x1b[33m${packageName}\x1b[0m not compiled.`);
+                            console.log(clc.yellowBright('[COMPILE FAILED]') + ' Package ' + clc.yellowBright(packageName) + ' not compiled.');
                             console.log(error);
                         }
                         else{
-                            console.log(`\x1b[32m[COMPILED]\x1b[0m Package \x1b[32m${process.env.ORACLE_USER}.${packageName}\x1b[0m compiled`);
+                            console.log(clc.greenBright('[COMPILED]') + ' Package ' + clc.greenBright(`${process.env.ORACLE_USER}.${packageName}`) + ' compiled.');
                         }
                     });
                 }
             });
         });
     }, (error) => {
-        console.log(`\x1b[33m[COMPILE FAILED]\x1b[0m Package not compiled.`);
+        console.log(clc.yellowBright('[COMPILE FAILED]') + ' Package not compiled.');
         console.log(error);
     });
 

@@ -4,7 +4,7 @@ var path = require('path');
 module.exports = (outputDir) => {
 
     //TODO: check dirs and files first.
-    //TODO: Try catch 
+    //TODO: Try catch, some output
     let dirPath = './';
     if(outputDir){
         dirPath = `./${outputDir}/`;

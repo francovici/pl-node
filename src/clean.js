@@ -1,6 +1,7 @@
 const fs = require("fs");
 const async = require("async");
 const getPackageList = require('./helpers/getPackageList');
+var clc = require("cli-color");
 
 const route = './Packages' ; 
 
@@ -20,16 +21,16 @@ module.exports = async function clean(packageToClean) {
         try{
             // Cleaning DEPLOY dir:
             if(fs.existsSync(buildedRoute)){
-                fs.rmSync(buildedRoute,{ recursive:true, force: true}); 
-                console.log(`\x1b[32m[CLEANED]\x1b[0m Cleaned \x1b[32m${buildedRoute}\x1b[0m directory.`);
+                fs.rmSync(buildedRoute, { recursive : true });
+                console.log(clc.greenBright('[CLEANED]') + ' Cleaned ' + clc.greenBright(buildedRoute) + ' directory.')
             }
         }     
         catch(err){
             if(err.code == 'EPERM' || err.code == 'EEXIST'){
-                console.log(`\x1b[33m[NOT CLEANED]\x1b[0m Package \x1b[33m${packageName}\x1b[0m not cleaned. Could not clean dir \x1b[33m${buildedRoute}\x1b[0m. Probably being used by a program.`);
+                console.log(clc.yellowBright('[NOT CLEANED]') + ' Package ' + clc.yellowBright(packageName) + ' not cleaned. Could not clean dir ' + clc.yellowBright(buildedRoute) + '. Probably being used by a program.');
             }
             else{
-                console.log(`\x1b[33m[NOT CLEANED]\x1b[0m  Package \x1b[33m${packageName}\x1b[0m not cleaned. ${err}`);
+                console.log(clc.yellowBright('[NOT CLEANED]') + ' Package ' + clc.yellowBright(packageName) + ' not cleaned. ' + err)
                 throw(err);
             }
         }

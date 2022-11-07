@@ -2,6 +2,7 @@ const join = require('./helpers/joiner');
 const fs = require("fs");
 const async = require("async");
 const getPackageList = require('./helpers/getPackageList');
+var clc = require("cli-color");
 
 const route = './Packages' ;
 
@@ -26,18 +27,18 @@ module.exports = async function build(packageToBuild) {
             // Joining files into the final one:
             join(`${route}/${packageName}`,buildedFileName, 'ascii', true).then(
                 () => {
-                        console.log(`\x1b[32m[BUILDED]\x1b[0m Package \x1b[32m${packageName}\x1b[0m builded at ${buildedFileName}`);
+                        console.log(clc.greenBright('[BUILDED]') + ' Package ' + clc.greenBright(packageName) + ' builded at ' + clc.greenBright(buildedFileName))
                     }
                 ).catch( (err) => {
-                    console.log(`\x1b[33m[NOT BUILDED]\x1b[0m Package \x1b[33m${packageName}\x1b[0m not builded. ${err}`);
+                    console.log(clc.yellowBright('[NOT BUILDED]') + ' Package ' + clc.yellowBright(packageName) + ' not builded. ' + err)
                 });
         }
         catch(err){
             if(err.code == 'EPERM' || err.code == 'EEXIST'){
-                console.log(`\x1b[33m[NOT BUILDED]\x1b[0m Package \x1b[33m${packageName}\x1b[0m not builded. Could not clean dir \x1b[33m${buildedRoute}\x1b[0m. Probably being used by a program.`);
+                console.log(clc.yellowBright('[NOT BUILDED]') + ' Package ' + clc.yellowBright(packageName) + ' not builded. Could not clean dir ' + clc.yellowBright(buildedRoute) + '. Probably being used by a program.')
             }
             else{
-                console.log(`\x1b[33m[NOT BUILDED]\x1b[0m  Package \x1b[33m${packageName}\x1b[0m not builded. ${err}`);
+                console.log(clc.yellowBright('[NOT BUILDED]') + ' Package ' + clc.yellowBright(packageName) + ' not builded. ' + err)
                 throw(err);
             }
         }
