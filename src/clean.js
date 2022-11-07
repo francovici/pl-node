@@ -4,12 +4,11 @@ const getPackageList = require('./helpers/getPackageList');
 
 const route = './Packages' ; 
 
-async function clean() {
+module.exports = async function clean(packageToClean) {
 
     let packages = await getPackageList();
 
     /* If a package name is send as argument, just build that one */
-    const packageToClean = process.env.npm_config_p ? process.env.npm_config_p : process.env.npm_config_package ? process.env.npm_config_package : null;
     if(packageToClean){
         packages = packages.filter(package => package === packageToClean);
     }
@@ -37,5 +36,3 @@ async function clean() {
     });
 
 }
-
-clean();

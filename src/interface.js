@@ -2,6 +2,8 @@ import arg from "arg";
 import help from './help';
 import init from './init';
 import build from './build';
+import clean from './clean';
+import compile from './compile';
 
 export function interfaceCommand(args) {
     const actions = argumentOptionsParser(args);
@@ -9,12 +11,18 @@ export function interfaceCommand(args) {
     if(actions.help){
         help();
     }
-    if(actions.init){
+    else if(actions.init){
         init(actions.parameters[0]);
     }
-    if(actions.build){
+    else if(actions.build){
       build(actions.parameters[0]);
-  }
+    }
+    else if(actions.clean){
+      clean(actions.parameters[0]);
+    }
+    else if(actions.compile){
+      compile(actions.parameters[0]);
+    }
 }
 
 function argumentOptionsParser(rawArguments) {
