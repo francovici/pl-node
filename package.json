@@ -16,7 +16,7 @@
     "cli-color": "^2.0.3",
     "dotenv": "^16.0.3",
     "esm": "^3.2.25",
-    "inquirer": "^9.1.4",
+    "inquirer": "^8.2.5",
     "oracledb": "^5.1.0"
   },
   "author": "Franco Vicini",
