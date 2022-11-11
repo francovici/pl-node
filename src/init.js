@@ -52,6 +52,7 @@ function createProjectOnDir(dirPath){
     createProjectFolder(dirPath,'src', { recursive: true }); 
     createProjectFolder(dirPath,'tests', { recursive: true }); 
     createProjectFile(dirPath,'.env',"ORACLE_USER=''\nPASSWORD=''\nCONNECTSTRING=''"); 
+    createProjectFile(dirPath,'.gitignore',"Packages/DEPLOY/**\n.env"); 
 }
 
 function createProjectFolder(dir,name,_options){
