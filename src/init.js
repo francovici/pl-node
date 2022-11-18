@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 var path = require('path');
 const clc = require('cli-color');
 import { exit } from 'process';
+import { createProjectOnDir } from './helpers/projectFactory';
 
 module.exports = (outputDir) => {
 
@@ -11,29 +12,43 @@ module.exports = (outputDir) => {
     let dirPath = './';
     if(outputDir){
         dirPath = `./${outputDir}/`;
-        createProjectOnDir(dirPath);
+        if(fs.existsSync(path.resolve(dirPath))){
+            console.log(`${clc.yellowBright('Warning:')} Directory already exists.`)
+
+            askYesOrNoQuestion('confirm_creating_on_dir','Would you like to initialize the project there anyway? (y/N)',
+            () => {
+                createProjectOnDir(dirPath);
+            },
+            () => {
+                console.log('');
+                console.log('[INFO] Project was not initialized. Please initialize it at a different directory.');
+                exit(1);
+            },
+            (error) => {
+                console.log(error);
+                console.log( clc.yellowBright('[NOT INITIALIZED]') + ' Project was not initialized');
+            })
+        }
+        else{
+            createProjectOnDir(dirPath);
+        }
     }
     else{
         console.log('');
-        console.log(clc.underline('Current folder'));
+        console.log(clc.underline('Current directory'));
         console.log(path.resolve('./'));
         console.log('');
-        inquirer.prompt([{
-            name: 'use_current_dir',   
-            message: 'Would you like to initialize a project in the current folder? (Y/n)'
-        }
-        ])
-        .then((answer) => {
-            if(answer.use_current_dir.toUpperCase() != 'Y'){
-                console.log('');
-                console.log('[INFO] Project was not initialized');
-                exit(1);
-            }
-            else{
-                createProjectOnDir(dirPath);
-            }
-        })
-        .catch((error) => {
+
+        askYesOrNoQuestion('use_dir_anyway','Would you like to initialize a project in the current directory? (y/N)',
+        () => {
+            createProjectOnDir(dirPath)
+        },
+        () => {
+            console.log('');
+            console.log('[INFO] Project was not initialized');
+            exit(1);
+        },
+        (error) => {
             console.log(error);
             console.log( clc.yellowBright('[NOT INITIALIZED]') + ' Project was not initialized');
         })
@@ -41,25 +56,21 @@ module.exports = (outputDir) => {
 
 }
 
-function createProjectOnDir(dirPath){
-    console.log('');
-    console.log( clc.black(clc.bgBlue('--- CREATING PROJECT ---')));
-    console.log('');
-    console.log('On folder: ' + path.resolve(`${dirPath}`))
-    console.log('');
-    
-    createProjectFolder(dirPath,'Packages', { recursive: true });
-    createProjectFolder(dirPath,'src', { recursive: true }); 
-    createProjectFolder(dirPath,'tests', { recursive: true }); 
-    createProjectFile(dirPath,'.env',"ORACLE_USER=''\nPASSWORD=''\nCONNECTSTRING=''"); 
-    createProjectFile(dirPath,'.gitignore',"Packages/DEPLOY/**\n.env"); 
+function askYesOrNoQuestion(question_id, message, yes_handler, no_handler, error_handler){
+    inquirer.prompt([{
+        name: question_id,   
+        message: message
+    }
+    ])
+    .then((answer) => {
+        if(answer[question_id].toUpperCase() != 'Y'){
+            no_handler();
+        }
+        else{
+            yes_handler();
+        }
+    })
+    .catch((error) => {
+        error_handler(error);
+    })
 }
-
-function createProjectFolder(dir,name,_options){
-    fs.mkdirSync(path.resolve(`${dir}${name}`),_options);
-    console.log(clc.greenBright('/'+name) + ' created');
-}   
-function createProjectFile(dir,name,_contents,_options){
-    fs.writeFileSync(path.resolve(`${dir}${name}`),_contents,_options); 
-    console.log(clc.greenBright(name) + ' created');
-}   
