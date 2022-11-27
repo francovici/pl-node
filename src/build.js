@@ -3,12 +3,18 @@ const fs = require("fs");
 const async = require("async");
 const getPackageList = require('./helpers/getPackageList');
 var clc = require("cli-color");
-
+require('dotenv').config();
 const route = './Packages' ;
 
 module.exports = async function build(packageToBuild) {
 
-    let packages = await getPackageList();
+    if(!process.env.PACKAGE_ENCODING){
+        throw clc.yellowBright("Environment variable PACKAGE_ENCODING must be set on .env file. Check Readme.md");
+    }
+
+    const readEncoding = process.env.PACKAGE_ENCODING;
+
+    let packages = await getPackageList(readEncoding);
 
     /* If a package name is send as argument, just build that one */
     if(packageToBuild){
@@ -25,7 +31,7 @@ module.exports = async function build(packageToBuild) {
             fs.mkdirSync(buildedRoute, { recursive: true }); 
         
             // Joining files into the final one:
-            join(`${route}/${packageName}`,buildedFileName, 'ascii', true).then(
+            join(`${route}/${packageName}`,buildedFileName, readEncoding, true).then(
                 () => {
                         console.log(clc.greenBright('[BUILDED]') + ' Package ' + clc.greenBright(packageName) + ' builded at ' + clc.greenBright(buildedFileName))
                     }
