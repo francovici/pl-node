@@ -39,6 +39,8 @@ describe('pl --clean <PACKAGE_NAME>', () => {
     })
 });
 
-after(() => {
-    fs.rmSync(testExampleDirPath, { recursive: true });
+afterEach(() => {
+    if(fs.existsSync(testExampleDirPath)){
+        fs.rmSync(testExampleDirPath, { recursive: true });
+    }
 });
