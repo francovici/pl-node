@@ -1,18 +1,76 @@
 const fs = require("fs");
+const inquirer = require('inquirer');
 var path = require('path');
+const clc = require('cli-color');
+import { exit } from 'process';
+import { createProjectOnDir } from './helpers/projectFactory';
 
 module.exports = (outputDir) => {
 
     //TODO: check dirs and files first.
-    //TODO: Try catch, some output
+    //TODO: Try catch
     let dirPath = './';
     if(outputDir){
         dirPath = `./${outputDir}/`;
+        if(fs.existsSync(path.resolve(dirPath))){
+            console.log(`${clc.yellowBright('Warning:')} Directory already exists.`)
+
+            askYesOrNoQuestion('confirm_creating_on_dir','Would you like to initialize the project there anyway? (y/N)',
+            () => {
+                createProjectOnDir(dirPath);
+            },
+            () => {
+                console.log('');
+                console.log('[INFO] Project was not initialized. Please initialize it at a different directory.');
+                exit(1);
+            },
+            (error) => {
+                console.log(error);
+                console.log( clc.yellowBright('[NOT INITIALIZED]') + ' Project was not initialized');
+            })
+        }
+        else{
+            createProjectOnDir(dirPath);
+        }
     }
-    
-    fs.mkdirSync(path.resolve(`${dirPath}Packages`), { recursive: true }); 
-    fs.mkdirSync(path.resolve(`${dirPath}src`), { recursive: true }); 
-    fs.writeFileSync(path.resolve(`${dirPath}.env`),"ORACLE_USER=''\nPASSWORD=''\nCONNECTSTRING=''"); 
-    fs.mkdirSync(path.resolve(`${dirPath}tests`), { recursive: true }); 
+    else{
+        console.log('');
+        console.log(clc.underline('Current directory'));
+        console.log(path.resolve('./'));
+        console.log('');
+
+        askYesOrNoQuestion('use_dir_anyway','Would you like to initialize a project in the current directory? (y/N)',
+        () => {
+            createProjectOnDir(dirPath)
+        },
+        () => {
+            console.log('');
+            console.log('[INFO] Project was not initialized');
+            exit(1);
+        },
+        (error) => {
+            console.log(error);
+            console.log( clc.yellowBright('[NOT INITIALIZED]') + ' Project was not initialized');
+        })
+    }
+
 }
 
+function askYesOrNoQuestion(question_id, message, yes_handler, no_handler, error_handler){
+    inquirer.prompt([{
+        name: question_id,   
+        message: message
+    }
+    ])
+    .then((answer) => {
+        if(answer[question_id].toUpperCase() != 'Y'){
+            no_handler();
+        }
+        else{
+            yes_handler();
+        }
+    })
+    .catch((error) => {
+        error_handler(error);
+    })
+}
