@@ -2,8 +2,7 @@ const fs = require("fs");
 const inquirer = require('inquirer');
 var path = require('path');
 const clc = require('cli-color');
-import { exit } from 'process';
-import { createProjectOnDir } from './helpers/projectFactory';
+const { createProjectOnDir } = require('./helpers/projectFactory');
 
 module.exports = (outputDir) => {
 
@@ -20,13 +19,11 @@ module.exports = (outputDir) => {
                 createProjectOnDir(dirPath);
             },
             () => {
-                console.log('');
-                console.log('[INFO] Project was not initialized. Please initialize it at a different directory.');
-                exit(1);
+                console.log('[INFO] Please initialize it at a different directory.');
+                throw 'Project was not initialized';
             },
             (error) => {
-                console.log(error);
-                console.log( clc.yellowBright('[NOT INITIALIZED]') + ' Project was not initialized');
+                console.log( clc.yellowBright('[NOT INITIALIZED] ') + error);
             })
         }
         else{
