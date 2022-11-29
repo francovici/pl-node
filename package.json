@@ -1,6 +1,6 @@
 {
   "name": "pl-node",
-  "version": "1.0.0-b",
+  "version": "1.0.0-beta",
   "description": "Package for working with Oracle PL/SQL packages",
   "main": "index.js",
   "scripts": {
