@@ -5,12 +5,8 @@ const {expect} = require('chai');
 const outputDir = 'dist';
 const testExampleDirPath = `./${outputDir}`;
 
-/* beforeEach('Rebuilding Packages dir for next test...',() => {
-    fs.cpSync(exampleDirPath,testExampleDirPath, { recursive: true });
-});
- */
-describe('pl --init', () => {
-    it.only('should create a dist folder with all files', () => {
+describe('pl --init dist', () => {
+    it('should create a dist folder with all files', () => {
         init(outputDir);
         const packages_exists = fs.existsSync(path.resolve(`${testExampleDirPath}/Packages`));
         const src_exists = fs.existsSync(path.resolve(`${testExampleDirPath}/src`));
