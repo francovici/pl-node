@@ -44,7 +44,7 @@ function compile(packageToCompile) {
                             () => {
                                 throwCompilationErrorIfExists(connection,packageName,'PACKAGE BODY')
                                 .then(
-                                    (packageName)=>{
+                                    ()=>{
                                         console.log(clc.greenBright('[COMPILED]') + ' Package ' + clc.greenBright(`${process.env.ORACLE_USER}.${packageName}`) + ' compiled.');
                                     }
                                 ).catch(
@@ -71,7 +71,7 @@ function compile(packageToCompile) {
                 (error)=> {
                     /* Head Common execution error */
                     console.log( clc.yellowBright('[COMPILE FAILED]') + ' Package ' + clc.yellowBright(packageName) + ' not compiled.');
-                    console.log(specError);
+                    console.log(error);
                 }
             )
         });
@@ -94,11 +94,11 @@ async function throwCompilationErrorIfExists(connection,packageName,errorType){
             const position = errorRecord[4];
             const text = errorRecord[5];
 
-            throw (`Error on ${type} line ${line} pos ${position} : ${text}`);
+            throw (`Error on ${type === 'PACKAGE' ? 'PACKAGE HEAD' : type } line ${line} pos ${position} : ${text}`);
         }
     }
     else{
-        Promise.resolve(packageName);
+        Promise.resolve();
     }   
 }
 
