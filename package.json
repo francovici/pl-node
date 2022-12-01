@@ -4,7 +4,13 @@
   "description": "Package for working with Oracle PL/SQL packages",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./tests/**.test.js"
+    "test": "mocha ./tests/**.test.js",
+    "compile":"pl --compile",
+    "build":"pl --build",
+    "clean":"pl --clean",
+    "help":"pl --help",
+    "init": "pl --init",
+    "init:dist": "pl --init dist"
   },
   "repository": {
     "type": "git",
