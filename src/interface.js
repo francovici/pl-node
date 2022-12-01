@@ -1,9 +1,9 @@
 import arg from "arg";
 import help from './help';
-import init from './init';
 import build from './build';
 import clean from './clean';
 import compile from './compile';
+const init = require('./init');
 import { version } from '../package.json';
 
 export function interfaceCommand(args) {
@@ -19,13 +19,13 @@ export function interfaceCommand(args) {
         init(actions.parameters[0]);
     }
     else if(actions.build){
-      build(actions.parameters[0]);
+        build(actions.parameters[0]);
     }
     else if(actions.clean){
-      clean(actions.parameters[0]);
+        clean(actions.parameters[0]);
     }
     else if(actions.compile){
-      compile(actions.parameters[0]);
+        compile(actions.parameters[0]);
     }
 }
 

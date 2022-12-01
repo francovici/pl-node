@@ -2,11 +2,11 @@ const fs = require("fs");
 const async = require("async");
 const path = require("path");
 
-module.exports = async function(directory, destination,encoding,addSlashes) {
+module.exports = async function(directory, destination,readEncoding,addSlashes) {
 
     try{
 
-        let files = await fs.readdirSync(directory,{withFileTypes: true, encoding: 'utf-8'});
+        let files = await fs.readdirSync(directory,{withFileTypes: true, encoding: readEncoding});
 
         files = files.filter(file => file.isFile());
         files = files.map(file => path.join(directory,file.name));
@@ -31,7 +31,7 @@ module.exports = async function(directory, destination,encoding,addSlashes) {
             }
 
              //Write the joined results to destination (in ascii/ANSI)
-            fs.appendFile(destination, joined, {encoding: encoding} , (err) => {
+            fs.appendFile(destination, joined, {encoding: 'ascii'} , (err) => {
                 if (err)
                     throw err;
                 return true;

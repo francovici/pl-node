@@ -7,7 +7,7 @@ var clc = require("cli-color");
 const packageHeadAndBody = require('./helpers/getPackageHeadAndBody');
 const getPackageList = require('./helpers/getPackageList');
 
-module.exports = function compile(packageToCompile) {
+function compile(packageToCompile) {
 
     let connection = null;
         
@@ -34,26 +34,46 @@ module.exports = function compile(packageToCompile) {
         async.map(packages,(packageName) => {
             
             //Compiling spec
-            connection.execute(packageHeadAndBody.getPackageHead(packageName),{},
-            async (specError,result)=>{
-                if(specError){
-                    console.log( clc.yellowBright('[COMPILE FAILED]') + ' Package ' + clc.yellowBright(packageName) + ' not compiled.');
-                    console.log(specError);
-                }
-                else{
-                    //Compiling body
-                    connection.execute(packageHeadAndBody.getPackageBody(packageName),{},
-                    (error,result)=>{
-                        if(error){
-                            console.log(clc.yellowBright('[COMPILE FAILED]') + ' Package ' + clc.yellowBright(packageName) + ' not compiled.');
-                            console.log(error);
-                        }
-                        else{
-                            console.log(clc.greenBright('[COMPILED]') + ' Package ' + clc.greenBright(`${process.env.ORACLE_USER}.${packageName}`) + ' compiled.');
-                        }
+            connection.execute(packageHeadAndBody.getPackageHead(packageName)).then(
+                () =>{
+                    throwCompilationErrorIfExists(connection,packageName,'PACKAGE')
+                    .then(() => {
+                        
+                        //Compiling body
+                        connection.execute(packageHeadAndBody.getPackageBody(packageName)).then(
+                            () => {
+                                throwCompilationErrorIfExists(connection,packageName,'PACKAGE BODY')
+                                .then(
+                                    ()=>{
+                                        console.log(clc.greenBright('[COMPILED]') + ' Package ' + clc.greenBright(`${process.env.ORACLE_USER}.${packageName}`) + ' compiled.');
+                                    }
+                                ).catch(
+                                    /* Body Compilation error */
+                                    (error)=>{
+                                    console.log(clc.yellowBright('[COMPILE FAILED]') + ' Package ' + clc.yellowBright(packageName) + ' not compiled.');
+                                    console.log(error);
+                                });
+                            }
+                        ).catch(
+                            /* Body Common execution error */
+                            (error) => {
+                                console.log(clc.yellowBright('[COMPILE FAILED]') + ' Package ' + clc.yellowBright(packageName) + ' not compiled.');
+                                console.log(error);
+                            }
+                        );
+                    }).catch(
+                        /* Head Compilation error */
+                        (error)=>{
+                        console.log(clc.yellowBright('[COMPILE FAILED]') + ' Package ' + clc.yellowBright(packageName) + ' not compiled.');
+                        console.log(error);
                     });
+                },
+                (error)=> {
+                    /* Head Common execution error */
+                    console.log( clc.yellowBright('[COMPILE FAILED]') + ' Package ' + clc.yellowBright(packageName) + ' not compiled.');
+                    console.log(error);
                 }
-            });
+            )
         });
     }, (error) => {
         console.log(clc.yellowBright('[COMPILE FAILED]') + ' Package not compiled.');
@@ -61,3 +81,25 @@ module.exports = function compile(packageToCompile) {
     });
 
 }
+
+async function throwCompilationErrorIfExists(connection,packageName,errorType){
+    const result = await connection.execute('SELECT * FROM user_errors');
+ 
+    if(result.rows.length > 0){
+        const errorRecord = result.rows[0];
+        const name = errorRecord[0];
+        const type = errorRecord[1];
+        if(name==packageName && type==errorType){
+            const line = errorRecord[3];
+            const position = errorRecord[4];
+            const text = errorRecord[5];
+
+            throw (`Error on ${type === 'PACKAGE' ? 'PACKAGE HEAD' : type } line ${line} pos ${position} : ${text}`);
+        }
+    }
+    else{
+        Promise.resolve();
+    }   
+}
+
+module.exports = compile;
