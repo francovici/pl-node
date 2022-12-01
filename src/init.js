@@ -43,7 +43,6 @@ module.exports = (outputDir) => {
         () => {
             console.log('');
             console.log('[INFO] Project was not initialized');
-            exit(1);
         },
         (error) => {
             console.log(error);
