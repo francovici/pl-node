@@ -44,12 +44,36 @@ function createProjectFolder(dir,name,_options){
     }
 }   
 function createProjectFile(dir,name,_contents,_options){
-    fs.writeFileSync(path.resolve(`${dir}${name}`),_contents,_options); 
-    console.log(clc.greenBright(name) + ' created');
+    try{
+        fs.writeFileSync(path.resolve(`${dir}${name}`),_contents,_options); 
+        console.log(clc.greenBright(name) + ' created');
+    }
+    catch(err){
+        if (!err === 'EEXIST'){
+            throw err;
+        }
+        else{
+            if(name){
+                console.log(clc.blueBright(name) + ' already exists. Skipped.');
+            }
+        }
+    }
 }   
 function copyProjectAsset(assetPath,destinationDir,newName){
-    fs.copyFileSync(assetPath,path.resolve(`${destinationDir}${newName}`));
-    console.log(clc.greenBright(newName) + ' created');
+    try{
+        fs.copyFileSync(assetPath,path.resolve(`${destinationDir}${newName}`),fs.constants.COPYFILE_EXCL);
+        console.log(clc.greenBright(newName) + ' created');
+    }
+    catch(err){
+        if (!err === 'EEXIST'){
+            throw err;
+        }
+        else{
+            if(newName){
+                console.log(clc.blueBright(newName) + ' already exists. Skipped.');
+            }
+        }
+    }
 }   
 
 module.exports = {copyProjectAsset, createProjectFile, createProjectFolder, createProjectOnDir}
