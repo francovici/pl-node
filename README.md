@@ -33,16 +33,22 @@ This will create the folders and files you need to get started.
 
 Then, you should place your PL/SQL packages inside the **Packages** folder.
 
-The current version requires that you split your packages in 2 files: SPEC and BODY and place them inside a sub-directory with the package's name.
+In the current version, you can place one or more packages directly into the folder and then simply run the [split command](#split-command). This will split the packages and create the structure needed for working with pl-node.
 
 <u>For example:</u>
 
-If you're working with a package named MY_PACKAGE.sql
-
-Your Packages folder should look like this:
+If you want to work with a package named MY_PACKAGE.sql, all you have to do is place it inside the Packages folder and run the [split command](#split-command).
 
 ```
 Packages/
+└── MY_PACKAGE.sql
+```
+
+Your Packages folder will look like this:
+
+```
+Packages/
+└── MY_PACKAGE.sql
 └── MY_PACKAGE/
     └── MY_PACKAGE.sql
     └── MY_PACKAGE_BODY.sql
@@ -54,6 +60,25 @@ Ok ! Now that we have our package (or packages) inside the project dir we can st
 
 <br>
 
+## Split command
+
+```
+pl --split
+```
+
+This command will scan the Packages folder for your new Packages and split them into spec/body. 
+It will create a new folder inside the Packages dir. It's a handy function for when you just added a package to the folder and don't want to split it manually.
+
+You can send a package name as extra argument so you can choose which package will be split:
+
+```
+pl --split MY_PACKAGE
+```
+
+Otherwise, all found packages will be splitted.
+
+<br>
+
 ## Build command
 
 ```
@@ -61,7 +86,7 @@ pl --build
 ```
 
 This command will scan the Packages folder for your Packages and build them. 
-The build process consists of merging head and body into one file with ASNI/ASCII encoding for better compatibility with Oracle.
+The build process consists of merging head and body into one file with ANSI/ASCII encoding for better compatibility with Oracle.
 
 You can send a package name as extra argument so you can choose which package will be built:
 

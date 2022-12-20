@@ -10,6 +10,7 @@ module.exports = () => {
     console.log('Command\t\tAction\t\t\t\t\tArguments');
 
     console.log('pl --init\tInit project structure\t\t\tsubDirectory');
+    console.log('pl --split\tSplit packages into spec and body\tpackageName');
     console.log('pl --clean\tCleans builded packages\t\t\tpackageName');
     console.log('pl --build\tBuilds package from source files\tpackageName');
     console.log('pl --compile\tCompiles existing packages on Oracle\tpackageName');
@@ -25,5 +26,9 @@ module.exports = () => {
     console.log('');
     console.log('pl --build ' + clc.blue('MY_PACKAGE'));
     console.log('Looks for the source code inside ./Packages/"MY_PACKAGE" directory and builds the package.');
+
+    console.log('');
+    console.log('pl --split');
+    console.log('Looks for new packages in ./Packages directory and splits it into spec and body inside a subDirectory.');
 
 }
