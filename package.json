@@ -10,7 +10,8 @@
     "clean":"pl --clean",
     "help":"pl --help",
     "init": "pl --init",
-    "init:dist": "pl --init dist"
+    "init:dist": "pl --init dist",
+    "split": "pl --split"
   },
   "repository": {
     "type": "git",
