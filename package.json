@@ -1,6 +1,6 @@
 {
   "name": "pl-node",
-  "version": "1.0.0-beta",
+  "version": "1.1.0",
   "description": "Package for working with Oracle PL/SQL packages",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,8 @@
     "clean":"pl --clean",
     "help":"pl --help",
     "init": "pl --init",
-    "init:dist": "pl --init dist"
+    "init:dist": "pl --init dist",
+    "split": "pl --split"
   },
   "repository": {
     "type": "git",
