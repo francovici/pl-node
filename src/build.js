@@ -31,7 +31,7 @@ module.exports = async function build(packageToBuild) {
             fs.mkdirSync(buildedRoute, { recursive: true }); 
         
             // Joining files into the final one:
-            join(`${route}/${packageName}`,buildedFileName, readEncoding, true).then(
+            join(`${route}/${packageName}`,buildedFileName, readEncoding, false).then(
                 () => {
                         console.log(clc.greenBright('[BUILDED]') + ' Package ' + clc.greenBright(packageName) + ' builded at ' + clc.greenBright(buildedFileName))
                     }
