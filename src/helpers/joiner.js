@@ -31,7 +31,7 @@ module.exports = async function(directory, destination,readEncoding,addSlashes) 
             }
 
              //Write the joined results to destination (in ascii/ANSI)
-            fs.appendFile(destination, joined, {encoding: 'ascii'} , (err) => {
+            fs.writeFile(destination, joined, {encoding: 'ascii'} , (err) => {
                 if (err)
                     throw err;
                 return true;
