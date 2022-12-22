@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "split": "pl --split",
+    "split": "npx pl --split",
     "test": "mocha ./tests/**.test.js",
-    "compile":"pl --compile",
-    "build":"pl --build",
-    "clean":"pl --clean",
-    "help":"pl --help"
+    "compile":"npx pl --compile",
+    "build":"npx pl --build",
+    "clean":"npx pl --clean",
+    "help":"npx pl --help"
   },
   "devDependencies": {
     "chai": "^4.3.7",
