@@ -19,7 +19,7 @@ async function split(packageToSplit){
 
     async.map(loosePackageList, (loosePackageName) => {
         splitOriginalPackage(loosePackageName,process.env.PACKAGE_ENCODING).then(()=>{
-            console.log(clc.greenBright('[SPLITTED]') + ` Package ${clc.greenBright(loosePackageName)} splitted into ./Packages/${loosePackageName} folder`);
+            console.log(clc.greenBright('[SPLITTED]') + ` Package ${clc.greenBright(loosePackageName)} splitted into ${clc.greenBright('./Packages/'+loosePackageName)} folder`);
         }).catch((err)=>{
             console.log(clc.yellowBright('[NOT SPLITTED]') + ` Package ${clc.yellowBright(loosePackageName)} couldn't be splitted. ${err}`)
         });
