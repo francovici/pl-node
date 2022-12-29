@@ -6,6 +6,8 @@ import compile from './compile';
 import split from "./split";
 const init = require('./init');
 import { version } from '../package.json';
+var clc = require("cli-color");
+
 
 export function interfaceCommand(args) {
     const actions = argumentOptionsParser(args);
@@ -20,16 +22,24 @@ export function interfaceCommand(args) {
         init(actions.parameters[0]);
     }
     else if(actions.build){
-        build(actions.parameters[0]);
+        build(actions.parameters[0]).catch((err)=>{
+          console.log(clc.yellowBright('[NOT BUILDED]') + ' ' + err);
+          console.log('Have you initialized the project properly?');
+        }); 
     }
     else if(actions.clean){
-        clean(actions.parameters[0]);
+        clean(actions.parameters[0]).catch((err)=>{
+          console.log(clc.yellowBright('[NOT CLEANED]') + ' ' + err);
+        });
     }
     else if(actions.compile){
         compile(actions.parameters[0]);
     }
     else if(actions.split){
-        split(actions.parameters[0]);
+        split(actions.parameters[0]).catch((err)=>{
+          console.log(clc.yellowBright('[NOT BUILDED]') + ' ' + err);
+          console.log('Have you initialized the project properly?');
+        });
     }
 }
 
