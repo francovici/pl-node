@@ -28,7 +28,7 @@
   },
   "author": "Franco Vicini",
   "license": "MIT",
-  "keywords": ["node","node.js","plsql","oracle","cli"],
+  "keywords": ["pl","node","node.js","plsql","oracle","cli"],
   "bin": {
     "pl": "bin/pl"
   },
