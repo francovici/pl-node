@@ -23,6 +23,7 @@ function createProjectOnDir(dirPath){
     createProjectFolder(dirPath,'tests');
     copyProjectAsset(path.resolve(`${binaryPath}/assets/env`),dirPath,'.env'); 
     copyProjectAsset(path.resolve(`${binaryPath}/assets/gitignore`),dirPath,'.gitignore'); 
+    copyProjectAsset(path.resolve(`${binaryPath}/assets/package`),dirPath,'package.json'); 
 }
 
 function createProjectFolder(dir,name,_options){

@@ -3,8 +3,11 @@ import help from './help';
 import build from './build';
 import clean from './clean';
 import compile from './compile';
+import split from "./split";
 const init = require('./init');
 import { version } from '../package.json';
+var clc = require("cli-color");
+
 
 export function interfaceCommand(args) {
     const actions = argumentOptionsParser(args);
@@ -19,13 +22,24 @@ export function interfaceCommand(args) {
         init(actions.parameters[0]);
     }
     else if(actions.build){
-        build(actions.parameters[0]);
+        build(actions.parameters[0]).catch((err)=>{
+          console.log(clc.yellowBright('[NOT BUILDED]') + ' ' + err);
+          console.log('Have you initialized the project properly?');
+        }); 
     }
     else if(actions.clean){
-        clean(actions.parameters[0]);
+        clean(actions.parameters[0]).catch((err)=>{
+          console.log(clc.yellowBright('[NOT CLEANED]') + ' ' + err);
+        });
     }
     else if(actions.compile){
         compile(actions.parameters[0]);
+    }
+    else if(actions.split){
+        split(actions.parameters[0]).catch((err)=>{
+          console.log(clc.yellowBright('[NOT BUILDED]') + ' ' + err);
+          console.log('Have you initialized the project properly?');
+        });
     }
 }
 
@@ -38,12 +52,14 @@ function argumentOptionsParser(rawArguments) {
         "--clean": Boolean,
         "--compile": Boolean,
         "--version" : Boolean,
+        "--split": Boolean,
         "--h": "--help",
         "--i": "--init",
         "--b": "--build",
         "--d": "--clean",
         "--c": "--compile",
         "--v": "--version",
+        "--s": "--split"
       },
       {
         argv: rawArguments.slice(2),
@@ -57,6 +73,7 @@ function argumentOptionsParser(rawArguments) {
       clean: args["--clean"] || false,
       compile: args["--compile"] || false,
       version: args["--version"] || false,
+      split: args["--split"] || false,
       parameters: rawArguments.slice(3)
     };
   }
