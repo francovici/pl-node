@@ -1,6 +1,7 @@
 const getPackageList = require("./helpers/getPackageList");
 const splitOriginalPackage = require("./helpers/splitters");
 const async = require("async");
+const clc = require("cli-color");
 require('dotenv').config();
 
 async function split(packageToSplit){
@@ -17,7 +18,11 @@ async function split(packageToSplit){
     }
 
     async.map(loosePackageList, (loosePackageName) => {
-        splitOriginalPackage(loosePackageName,process.env.PACKAGE_ENCODING);
+        splitOriginalPackage(loosePackageName,process.env.PACKAGE_ENCODING).then(()=>{
+            console.log(clc.greenBright('[SPLITTED]') + ` Package ${clc.greenBright(loosePackageName)} splitted into ${clc.greenBright('./Packages/'+loosePackageName)} folder`);
+        }).catch((err)=>{
+            console.log(clc.yellowBright('[NOT SPLITTED]') + ` Package ${clc.yellowBright(loosePackageName)} couldn't be splitted. ${err}`)
+        });
     });
 
 }

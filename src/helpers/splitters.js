@@ -21,7 +21,7 @@ async function splitOriginalPackage(package_name, encoding){
             if(bodyStartLine > -1){
                 //It's the first time that the body definition appears.
                 //So I write the first piece on the spec, and the rest on the body.
-                specWriteStream.write(chunkLines.slice(0,bodyStartLine - 1).join('\n'));
+                specWriteStream.write(chunkLines.slice(0,bodyStartLine).join('\n').trim());
                 bodyWriteStream.write(chunkLines.slice(bodyStartLine,chunkLines.length).join('\n'));
             }
             else{
@@ -41,7 +41,7 @@ async function splitOriginalPackage(package_name, encoding){
 }
 
 function cleanChunk(chunk){
-    return chunk.replace('/','').trim();
+    return chunk.trim();
 }
 
 function splitChunkInLines(chunk){
